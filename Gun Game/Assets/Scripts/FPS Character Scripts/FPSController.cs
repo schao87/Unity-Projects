@@ -7,6 +7,7 @@ public class FPSController : MonoBehaviour {
 	private Transform firstPerson_Camera;
 	private Vector3 firstPerson_View_Rotation = Vector3.zero;
 
+
 	public float walkSpeed = 6.75f;
 	public float runSpeed = 10f;
 	public float crouchSpeed = 4f;
@@ -32,9 +33,12 @@ public class FPSController : MonoBehaviour {
 	private Vector3 default_CamPos;
 	private float camHeight;
 
+	private FPSPlayerAnimations playerAnimations;
+
 
 	// Use this for initialization
 	void Start () {
+		
 		firstPerson_View = transform.Find ("FPS View").transform; // transform.find goes through gameobject children to find name
 		charController = GetComponent<CharacterController> ();
 		speed = walkSpeed;
@@ -43,6 +47,8 @@ public class FPSController : MonoBehaviour {
 		rayDistance = charController.height * .5f + charController.radius; //detects if we are on the ground when crouching
 		default_ControllerHeight = charController.height;
 		default_CamPos = firstPerson_View.localPosition;
+
+		playerAnimations = GetComponent<FPSPlayerAnimations> ();
 	}
 	
 	// Update is called once per frame
@@ -81,14 +87,34 @@ public class FPSController : MonoBehaviour {
 
 		if(is_Grounded){
 			PlayerCrouchingAndSprinting ();
-			moveDirection = new Vector3 (inputX * inputModifyFactor, -antiBumpFactor, inputY * inputModifyFactor); //anitbumpfactor will smooth movement when bumping into wall
+
+			//THIS IS WHERE IT IS GETTING THE X AND Y MOVEMENT
+			//THIS IS WHERE IT IS GETTING THE X AND Y MOVEMENT
+			moveDirection = new Vector3 (inputX * inputModifyFactor, -antiBumpFactor, inputY * inputModifyFactor); //anitbumpfactor will smooth movement when bumping into wall.
+			//THIS IS WHERE IT IS GETTING THE X AND Y MOVEMENT
+			//THIS IS WHERE IT IS GETTING THE X AND Y MOVEMENT
+
+
 			moveDirection = transform.TransformDirection (moveDirection) * speed; // converting direction from local space to world space
+
 			PlayerJump ();
+		}else{
+//			if (charController.velocity.z == 0 && charController.velocity.x == 0) {
+				//controls air jumping
+				moveDirection.x = inputX * speed * inputModifyFactor;
+				moveDirection.z = inputY * speed * inputModifyFactor;
+				moveDirection = transform.TransformDirection(moveDirection);
+//			}	
+
 		}
+
+
 		moveDirection.y -= gravity * Time.deltaTime;
 		is_Grounded = (charController.Move (moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0; //Move returns a collision flag. collision flags is a bit number. if collision flag is not 0, it means we are ground and returns true
 
 		is_Moving = charController.velocity.magnitude > .15f;
+
+		HandleAnimations ();
 	}
 
 	void PlayerCrouchingAndSprinting(){
@@ -121,6 +147,7 @@ public class FPSController : MonoBehaviour {
 				speed = walkSpeed;
 			}
 		}
+		playerAnimations.PlayerCrouch (is_Crouching);
 	}
 
 	bool CanGetUp(){
@@ -152,6 +179,9 @@ public class FPSController : MonoBehaviour {
 			if(is_Crouching){
 				if(CanGetUp()){
 					is_Crouching = false;
+
+					playerAnimations.PlayerCrouch (is_Crouching);
+
 					StopCoroutine (MoveCameraCrouch ());
 					StartCoroutine (MoveCameraCrouch ());
 				}
@@ -161,5 +191,15 @@ public class FPSController : MonoBehaviour {
 
 		}
 
+
+	}
+
+	void HandleAnimations(){
+		playerAnimations.Movement (charController.velocity.magnitude);
+		playerAnimations.PlayerJump (charController.velocity.y);
+
+		if(is_Crouching && charController.velocity.magnitude > 0f){ //if we are crouching and moving
+			playerAnimations.PlayerCrouchWalk (charController.velocity.magnitude);
+		}
 	}
 }	
