@@ -16,7 +16,7 @@ public class FPSController : MonoBehaviour {
 	public float gravity = 20f;
 
 	private float speed;
-	private bool is_Moving, is_Grounded, is_Crouching;
+	private bool is_Moving, is_Grounded, is_Crouching, is_CrouchingBack;
 
 	private float inputX, inputY;
 	private float inputX_Set, inputY_Set;
@@ -33,8 +33,13 @@ public class FPSController : MonoBehaviour {
 	private Vector3 default_CamPos;
 	private float camHeight;
 
-	private FPSPlayerAnimations playerAnimations;
+	private FPSPlayerAnimations playerAnimations;	
 
+	[SerializeField] private WeaponManager weapon_Manager;
+	private FPSWeapon current_Weapon;
+
+	private float fireRate = 15f;
+	private float nextTimeToFire = 0f;
 
 	// Use this for initialization
 	void Start () {
@@ -49,11 +54,15 @@ public class FPSController : MonoBehaviour {
 		default_CamPos = firstPerson_View.localPosition;
 
 		playerAnimations = GetComponent<FPSPlayerAnimations> ();
+
+		weapon_Manager.weapons [0].SetActive (true);
+		current_Weapon = weapon_Manager.weapons [0].GetComponent<FPSWeapon> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		PlayerMovement ();
+		SelectWeapon ();
 	}
 
 	void PlayerMovement(){
@@ -62,6 +71,7 @@ public class FPSController : MonoBehaviour {
 				inputY_Set = 1f;
 			}else{
 				inputY_Set = -1f;
+
 			}
 		}else{
 			inputY_Set = 0f;
@@ -121,6 +131,10 @@ public class FPSController : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.LeftControl)){
 			if(!is_Crouching){
 				is_Crouching = true;
+//				if(Input.GetKeyDown(KeyCode.S)){
+//					is_CrouchingBack = true;
+//					playerAnimations.PlayerCrouchWalkBack (charController.velocity.magnitude);
+//				}
 			}else{
 				if(CanGetUp()){
 					is_Crouching = false;
@@ -148,6 +162,7 @@ public class FPSController : MonoBehaviour {
 			}
 		}
 		playerAnimations.PlayerCrouch (is_Crouching);
+//		playerAnimations.PlayerCrouchBack (is_CrouchingBack);
 	}
 
 	bool CanGetUp(){
@@ -176,18 +191,18 @@ public class FPSController : MonoBehaviour {
 
 	void PlayerJump(){
 		if(Input.GetKeyDown(KeyCode.Space)){
-			if(is_Crouching){
-				if(CanGetUp()){
-					is_Crouching = false;
-
-					playerAnimations.PlayerCrouch (is_Crouching);
-
-					StopCoroutine (MoveCameraCrouch ());
-					StartCoroutine (MoveCameraCrouch ());
-				}
-			}else{
+//			if(is_Crouching){
+//				if(CanGetUp()){
+//					is_Crouching = false;
+//
+//					playerAnimations.PlayerCrouch (is_Crouching);
+//
+//					StopCoroutine (MoveCameraCrouch ());
+//					StartCoroutine (MoveCameraCrouch ());
+//				}
+//			}else{
 				moveDirection.y = jumpSpeed;
-			}
+//			}
 
 		}
 
@@ -200,6 +215,68 @@ public class FPSController : MonoBehaviour {
 
 		if(is_Crouching && charController.velocity.magnitude > 0f){ //if we are crouching and moving
 			playerAnimations.PlayerCrouchWalk (charController.velocity.magnitude);
+
+//			if (Input.GetKeyDown (KeyCode.S)) {
+//				is_CrouchingBack = true;
+//				playerAnimations.PlayerCrouch (is_CrouchingBack);
+//				playerAnimations.PlayerCrouchWalkBack (charController.velocity.magnitude);
+//			}
+		}
+
+		if(Input.GetMouseButtonDown(0) && Time.time > nextTimeToFire){
+			nextTimeToFire = Time.time + 1f / fireRate;
+
+			if(is_Crouching){
+				playerAnimations.Shoot (false);
+			}else{
+				playerAnimations.Shoot (true);
+			}
+			current_Weapon.Shoot ();
+		}
+
+		if(Input.GetKeyDown(KeyCode.R)){
+			playerAnimations.ReloadGun ();
+		}
+	}
+
+	void SelectWeapon(){
+		if(Input.GetKeyDown(KeyCode.Alpha1)){
+			if(!weapon_Manager.weapons[0].activeInHierarchy){
+				for(int i = 0; i< weapon_Manager.weapons.Length; i++){
+					weapon_Manager.weapons [i].SetActive (false);
+				}
+				current_Weapon = null;
+				weapon_Manager.weapons [0].SetActive (true);
+				current_Weapon = weapon_Manager.weapons [0].GetComponent<FPSWeapon> ();
+
+				playerAnimations.ChangeController (true);
+			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha2)){
+			if(!weapon_Manager.weapons[1].activeInHierarchy){
+				for(int i = 0; i< weapon_Manager.weapons.Length; i++){
+					weapon_Manager.weapons [i].SetActive (false);
+				}
+				current_Weapon = null;
+				weapon_Manager.weapons [1].SetActive (true);
+				current_Weapon = weapon_Manager.weapons [1].GetComponent<FPSWeapon> ();
+			
+				playerAnimations.ChangeController (false); //set to false because it's not a pistol
+			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha3)){
+			if(!weapon_Manager.weapons[2].activeInHierarchy){
+				for(int i = 0; i< weapon_Manager.weapons.Length; i++){
+					weapon_Manager.weapons [i].SetActive (false);
+				}
+				current_Weapon = null;
+				weapon_Manager.weapons [2].SetActive (true);
+				current_Weapon = weapon_Manager.weapons [2].GetComponent<FPSWeapon> ();
+
+				playerAnimations.ChangeController (false);
+			}
 		}
 	}
 }	
