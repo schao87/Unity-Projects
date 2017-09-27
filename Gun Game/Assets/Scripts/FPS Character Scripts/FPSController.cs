@@ -6,6 +6,10 @@ public class FPSController : MonoBehaviour {
 	private Transform firstPerson_View;
 	private Transform firstPerson_Camera;
 	private Vector3 firstPerson_View_Rotation = Vector3.zero;
+	private Animator anim;
+	private AudioSource audioManager;
+	public AudioClip loadDeagleClip, loadAkClip, loadM4Clip;
+	private bool canShoot = true;
 
 
 	public float walkSpeed = 6.75f;
@@ -41,9 +45,13 @@ public class FPSController : MonoBehaviour {
 	private float fireRate = 15f;
 	private float nextTimeToFire = 0f;
 
+	[SerializeField] private WeaponManager handsWeapon_Manager;
+	private FPSHandsWeapon current_Hands_Weapon;
+
 	// Use this for initialization
 	void Start () {
-		
+		audioManager = GetComponent<AudioSource> ();
+		anim = GetComponent<Animator> ();
 		firstPerson_View = transform.Find ("FPS View").transform; // transform.find goes through gameobject children to find name
 		charController = GetComponent<CharacterController> ();
 		speed = walkSpeed;
@@ -57,6 +65,9 @@ public class FPSController : MonoBehaviour {
 
 		weapon_Manager.weapons [0].SetActive (true);
 		current_Weapon = weapon_Manager.weapons [0].GetComponent<FPSWeapon> ();
+
+		handsWeapon_Manager.weapons [0].SetActive (true); //activates deagle
+		current_Hands_Weapon = handsWeapon_Manager.weapons [0].GetComponent<FPSHandsWeapon> (); //gets reference of script on current weapon
 	}
 	
 	// Update is called once per frame
@@ -131,9 +142,8 @@ public class FPSController : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.LeftControl)){
 			if(!is_Crouching){
 				is_Crouching = true;
-//				if(Input.GetKeyDown(KeyCode.S)){
-//					is_CrouchingBack = true;
-//					playerAnimations.PlayerCrouchWalkBack (charController.velocity.magnitude);
+//				if(Input.GetKeyDown(KeyCode.S) && Input.GetKeyDown(KeyCode.LeftControl)){
+//					anim.SetBool ("CrouchBack", true);
 //				}
 			}else{
 				if(CanGetUp()){
@@ -216,14 +226,14 @@ public class FPSController : MonoBehaviour {
 		if(is_Crouching && charController.velocity.magnitude > 0f){ //if we are crouching and moving
 			playerAnimations.PlayerCrouchWalk (charController.velocity.magnitude);
 
-//			if (Input.GetKeyDown (KeyCode.S)) {
-//				is_CrouchingBack = true;
-//				playerAnimations.PlayerCrouch (is_CrouchingBack);
+			if (Input.GetKeyDown (KeyCode.S)) {
+				is_CrouchingBack = true;
+				playerAnimations.PlayerCrouch (is_CrouchingBack);
 //				playerAnimations.PlayerCrouchWalkBack (charController.velocity.magnitude);
-//			}
+			}
 		}
-
-		if(Input.GetMouseButtonDown(0) && Time.time > nextTimeToFire){
+		//SHOOTING
+		if(Input.GetMouseButtonDown(0) && Time.time > nextTimeToFire && canShoot){
 			nextTimeToFire = Time.time + 1f / fireRate;
 
 			if(is_Crouching){
@@ -232,17 +242,34 @@ public class FPSController : MonoBehaviour {
 				playerAnimations.Shoot (true);
 			}
 			current_Weapon.Shoot ();
+			current_Hands_Weapon.Shoot ();
 		}
 
 		if(Input.GetKeyDown(KeyCode.R)){
 			playerAnimations.ReloadGun ();
+			current_Hands_Weapon.Reload ();
 		}
+
+
 	}
 
+
+
 	void SelectWeapon(){
-		if(Input.GetKeyDown(KeyCode.Alpha1)){
-			if(!weapon_Manager.weapons[0].activeInHierarchy){
-				for(int i = 0; i< weapon_Manager.weapons.Length; i++){
+		if (Input.GetKeyDown (KeyCode.Alpha1)) {
+			canShoot = false;
+			if (!handsWeapon_Manager.weapons [0].activeInHierarchy) { //if current active weapon is not weapon 1
+				for (int i = 0; i < handsWeapon_Manager.weapons.Length; i++) {
+					handsWeapon_Manager.weapons [i].SetActive (false); // turn off all other weapons
+				}
+
+				current_Hands_Weapon = null;
+				handsWeapon_Manager.weapons [0].SetActive (true); //set weapon 1 to active
+				current_Hands_Weapon = handsWeapon_Manager.weapons [0].GetComponent<FPSHandsWeapon> (); // get script from weapon 1
+			}
+
+			if (!weapon_Manager.weapons [0].activeInHierarchy) {
+				for (int i = 0; i < weapon_Manager.weapons.Length; i++) {
 					weapon_Manager.weapons [i].SetActive (false);
 				}
 				current_Weapon = null;
@@ -250,12 +277,25 @@ public class FPSController : MonoBehaviour {
 				current_Weapon = weapon_Manager.weapons [0].GetComponent<FPSWeapon> ();
 
 				playerAnimations.ChangeController (true);
+				StartCoroutine (loadDeagle());
+
 			}
 		}
 
-		if(Input.GetKeyDown(KeyCode.Alpha2)){
-			if(!weapon_Manager.weapons[1].activeInHierarchy){
-				for(int i = 0; i< weapon_Manager.weapons.Length; i++){
+		if (Input.GetKeyDown (KeyCode.Alpha2)) {
+			canShoot = false;
+			if (!handsWeapon_Manager.weapons [1].activeInHierarchy) { //if current active weapon is not weapon 1
+				for (int i = 0; i < handsWeapon_Manager.weapons.Length; i++) {
+					handsWeapon_Manager.weapons [i].SetActive (false); // turn off all other weapons
+				}
+
+				current_Hands_Weapon = null;
+				handsWeapon_Manager.weapons [1].SetActive (true); //set weapon 1 to active
+				current_Hands_Weapon = handsWeapon_Manager.weapons [1].GetComponent<FPSHandsWeapon> (); // get script from weapon 1
+			}
+
+			if (!weapon_Manager.weapons [1].activeInHierarchy) {
+				for (int i = 0; i < weapon_Manager.weapons.Length; i++) {
 					weapon_Manager.weapons [i].SetActive (false);
 				}
 				current_Weapon = null;
@@ -263,12 +303,25 @@ public class FPSController : MonoBehaviour {
 				current_Weapon = weapon_Manager.weapons [1].GetComponent<FPSWeapon> ();
 			
 				playerAnimations.ChangeController (false); //set to false because it's not a pistol
+				StartCoroutine (loadAk47());
 			}
 		}
 
-		if(Input.GetKeyDown(KeyCode.Alpha3)){
-			if(!weapon_Manager.weapons[2].activeInHierarchy){
-				for(int i = 0; i< weapon_Manager.weapons.Length; i++){
+		if (Input.GetKeyDown (KeyCode.Alpha3)) {
+			canShoot = false;
+			if (!handsWeapon_Manager.weapons [2].activeInHierarchy) { //if current active weapon is not weapon 1
+				for (int i = 0; i < handsWeapon_Manager.weapons.Length; i++) {
+					handsWeapon_Manager.weapons [i].SetActive (false); // turn off all other weapons
+				}
+
+				current_Hands_Weapon = null;
+				handsWeapon_Manager.weapons [2].SetActive (true); //set weapon 1 to active
+				current_Hands_Weapon = handsWeapon_Manager.weapons [2].GetComponent<FPSHandsWeapon> (); // get script from weapon 1
+
+			}
+
+			if (!weapon_Manager.weapons [2].activeInHierarchy) {
+				for (int i = 0; i < weapon_Manager.weapons.Length; i++) {
 					weapon_Manager.weapons [i].SetActive (false);
 				}
 				current_Weapon = null;
@@ -276,7 +329,43 @@ public class FPSController : MonoBehaviour {
 				current_Weapon = weapon_Manager.weapons [2].GetComponent<FPSWeapon> ();
 
 				playerAnimations.ChangeController (false);
+				StartCoroutine (loadM4a1 ());
 			}
+
+
 		}
+
+	}//select weapon
+
+	IEnumerator loadM4a1(){
+		yield return new WaitForSeconds (.9f);
+
+		if(audioManager.clip != loadM4Clip){
+			audioManager.clip = loadM4Clip;
+		}
+		audioManager.Play ();
+		yield return new WaitForSeconds (.7f);
+		canShoot = true;
 	}
-}	
+	IEnumerator loadAk47(){
+		yield return new WaitForSeconds (.5f);
+
+		if(audioManager.clip != loadAkClip){
+			audioManager.clip = loadAkClip;
+		}
+		audioManager.Play ();
+		yield return new WaitForSeconds (.5f);
+		canShoot = true;
+	}
+
+	IEnumerator loadDeagle(){
+		yield return new WaitForSeconds (.2f);
+
+		if(audioManager.clip != loadDeagleClip){
+			audioManager.clip = loadDeagleClip;
+		}
+		audioManager.Play ();
+		yield return new WaitForSeconds (.6f);
+		canShoot = true;
+	}
+}//class

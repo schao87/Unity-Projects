@@ -8,7 +8,7 @@ public class FPSPlayerAnimations : MonoBehaviour {
 	private string MOVE = "Move";
 	private string VELOCITY_Y = "VelocityY";
 	private string CROUCH = "Crouch";
-//	private string CROUCHBACK = "CrouchBack";
+	private string CROUCHBACK = "CrouchBack";
 	private string CROUCH_WALK = "CrouchWalk";
 
 	private string STAND_SHOOT = "StandShoot";
@@ -49,13 +49,13 @@ public class FPSPlayerAnimations : MonoBehaviour {
 
 
 
-//	public void PlayerCrouchBack(bool isCrouchingBack){
-//		anim.SetBool (CROUCHBACK, isCrouchingBack);
-//	}
-//
-//	public void PlayerCrouchWalkBack(float magnitude){
-//		anim.SetFloat(CROUCH_WALK_BACK, magnitude);
-//	}
+	public void PlayerCrouchBack(bool isCrouchingBack){
+		anim.SetBool (CROUCHBACK, isCrouchingBack);
+	}
+
+	public void PlayerCrouchWalkBack(float magnitude){
+		anim.SetFloat(CROUCH_WALK_BACK, magnitude);
+	}
 
 	public void Shoot(bool isStanding){
 		if(isStanding){

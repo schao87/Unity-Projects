@@ -2015,13 +2015,14 @@ GameObject:
   - component: {fileID: 4472247841084278}
   - component: {fileID: 95841431150105326}
   - component: {fileID: 82664210610639572}
+  - component: {fileID: 114199048317699812}
   m_Layer: 0
   m_Name: ak47
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1485025188885816
 GameObject:
   m_ObjectHideFlags: 1
@@ -2126,6 +2127,7 @@ GameObject:
   - component: {fileID: 124767043080775060}
   - component: {fileID: 81006547236848838}
   - component: {fileID: 114511468504753818}
+  - component: {fileID: 114160434895934534}
   m_Layer: 0
   m_Name: FPS Camera
   m_TagString: MainCamera
@@ -2248,6 +2250,7 @@ GameObject:
   - component: {fileID: 4471089544956366}
   - component: {fileID: 95568425577703076}
   - component: {fileID: 82400755966513054}
+  - component: {fileID: 114219503253464204}
   m_Layer: 0
   m_Name: m4a1
   m_TagString: Untagged
@@ -2372,13 +2375,14 @@ GameObject:
   - component: {fileID: 4299899213071390}
   - component: {fileID: 95680823368681182}
   - component: {fileID: 82955466143237506}
+  - component: {fileID: 114824967551373230}
   m_Layer: 0
   m_Name: deagle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1543240735227316
 GameObject:
   m_ObjectHideFlags: 1
@@ -3023,6 +3027,7 @@ GameObject:
   - component: {fileID: 114038641600241432}
   - component: {fileID: 114572459515839422}
   - component: {fileID: 114422206380441940}
+  - component: {fileID: 82601245435403024}
   m_Layer: 0
   m_Name: FPS Player
   m_TagString: Player
@@ -8774,6 +8779,86 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!82 &82601245435403024
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1682374370602224}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!82 &82664210610639572
 AudioSource:
   m_ObjectHideFlags: 1
@@ -9020,6 +9105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66cdd7ea2c64e4ce48d9fd7de8e81d94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadDeagleClip: {fileID: 8300000, guid: 542d509fc280ad54a87b21b1df997e70, type: 3}
+  loadAkClip: {fileID: 8300000, guid: 8f40913aad66c184e8e1be195cc87b36, type: 3}
+  loadM4Clip: {fileID: 8300000, guid: 0090a339d7a128d4aa0f7d0d48abcf2f, type: 3}
   walkSpeed: 6.75
   runSpeed: 10
   crouchSpeed: 4
@@ -9030,6 +9118,52 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   weapon_Manager: {fileID: 114566663230068768}
+  handsWeapon_Manager: {fileID: 114160434895934534}
+--- !u!114 &114160434895934534
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1496694161956826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c888870bef124f5dac13b5c6922ed3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapons:
+  - {fileID: 1540487004298624}
+  - {fileID: 1479690181613690}
+  - {fileID: 1516357791595700}
+--- !u!114 &114199048317699812
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1479690181613690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c18281bdde6548c0abb30bc82cdf4c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootClip: {fileID: 8300000, guid: 8077d84082459fd4ba579dda0e473e20, type: 3}
+  reloadClipOut: {fileID: 8300000, guid: 9e3c5f6b64bc3e74e8ac3e0dcb40a5f0, type: 3}
+  reloadClipIn: {fileID: 8300000, guid: 328afefd1c0aa584ea19cbc342dee25e, type: 3}
+  loadClip: {fileID: 0}
+--- !u!114 &114219503253464204
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1516357791595700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c18281bdde6548c0abb30bc82cdf4c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootClip: {fileID: 8300000, guid: 93f9c3363bf680b46b725c07791f988a, type: 3}
+  reloadClipOut: {fileID: 8300000, guid: 0af0ffdf4a4735548b18d796fabdaf25, type: 3}
+  reloadClipIn: {fileID: 8300000, guid: a2eeccbe4afb5b342a8b6e440b9d6529, type: 3}
+  loadClip: {fileID: 8300000, guid: 0090a339d7a128d4aa0f7d0d48abcf2f, type: 3}
 --- !u!114 &114422206380441940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9084,6 +9218,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axes: 0
+--- !u!114 &114824967551373230
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1540487004298624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c18281bdde6548c0abb30bc82cdf4c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootClip: {fileID: 8300000, guid: fde722301da517f429eaec7a286baea1, type: 3}
+  reloadClipOut: {fileID: 8300000, guid: 98fa4c1ec6690484d90f0458a47577e7, type: 3}
+  reloadClipIn: {fileID: 8300000, guid: dd37bc8e9362aae4fba8007a3287374d, type: 3}
+  loadClip: {fileID: 0}
 --- !u!114 &114894847796649004
 MonoBehaviour:
   m_ObjectHideFlags: 1
