@@ -3028,6 +3028,8 @@ GameObject:
   - component: {fileID: 114572459515839422}
   - component: {fileID: 114422206380441940}
   - component: {fileID: 82601245435403024}
+  - component: {fileID: 114628191694655714}
+  - component: {fileID: 114108818075000224}
   m_Layer: 0
   m_Name: FPS Player
   m_TagString: Player
@@ -9119,6 +9121,18 @@ MonoBehaviour:
     m_Bits: 1
   weapon_Manager: {fileID: 114566663230068768}
   handsWeapon_Manager: {fileID: 114160434895934534}
+--- !u!114 &114108818075000224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1682374370602224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a050be0b608864566ac27321be7371d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  concrete_Impact: {fileID: 100002, guid: 2b4ffdf4a64f87d4ca3c0de925e6d343, type: 2}
 --- !u!114 &114160434895934534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9218,6 +9232,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axes: 0
+--- !u!114 &114628191694655714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1682374370602224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927221577d7f64f769adca4b2f657bf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114824967551373230
 MonoBehaviour:
   m_ObjectHideFlags: 1

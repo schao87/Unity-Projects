@@ -226,11 +226,6 @@ public class FPSController : MonoBehaviour {
 		if(is_Crouching && charController.velocity.magnitude > 0f){ //if we are crouching and moving
 			playerAnimations.PlayerCrouchWalk (charController.velocity.magnitude);
 
-			if (Input.GetKeyDown (KeyCode.S)) {
-				is_CrouchingBack = true;
-				playerAnimations.PlayerCrouch (is_CrouchingBack);
-//				playerAnimations.PlayerCrouchWalkBack (charController.velocity.magnitude);
-			}
 		}
 		//SHOOTING
 		if(Input.GetMouseButtonDown(0) && Time.time > nextTimeToFire && canShoot){
@@ -365,7 +360,7 @@ public class FPSController : MonoBehaviour {
 			audioManager.clip = loadDeagleClip;
 		}
 		audioManager.Play ();
-		yield return new WaitForSeconds (.6f);
+		yield return new WaitForSeconds (.7f);
 		canShoot = true;
 	}
 }//class
