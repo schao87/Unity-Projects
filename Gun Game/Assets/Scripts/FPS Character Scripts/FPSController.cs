@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class FPSController : MonoBehaviour {
+public class FPSController : NetworkBehaviour {
+//	public static FPSController instance = null;
+
 	private Transform firstPerson_View;
 	private Transform firstPerson_Camera;
 	private Vector3 firstPerson_View_Rotation = Vector3.zero;
@@ -11,6 +14,10 @@ public class FPSController : MonoBehaviour {
 	public AudioClip loadDeagleClip, loadAkClip, loadM4Clip;
 	private bool canShoot = true;
 
+	public bool CanShoot{
+		get {return canShoot;}
+
+	}
 
 	public float walkSpeed = 6.75f;
 	public float runSpeed = 10f;
@@ -72,6 +79,11 @@ public class FPSController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(!isLocalPlayer){
+			//if this statement is true and we execute return code, all code written below return will not be executed. playerMovement and SelectWeapon
+			return;
+		}
+
 		PlayerMovement ();
 		SelectWeapon ();
 	}
