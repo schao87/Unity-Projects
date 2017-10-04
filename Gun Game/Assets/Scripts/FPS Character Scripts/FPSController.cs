@@ -55,6 +55,11 @@ public class FPSController : NetworkBehaviour {
 	[SerializeField] private WeaponManager handsWeapon_Manager;
 	private FPSHandsWeapon current_Hands_Weapon;
 
+	public GameObject playerHolder, weaponsHolder;
+	public GameObject[] weapons_FPS;
+	private Camera mainCam;
+	public FPSMouse[] mouseLook;
+
 	// Use this for initialization
 	void Start () {
 		audioManager = GetComponent<AudioSource> ();
@@ -75,10 +80,62 @@ public class FPSController : NetworkBehaviour {
 
 		handsWeapon_Manager.weapons [0].SetActive (true); //activates deagle
 		current_Hands_Weapon = handsWeapon_Manager.weapons [0].GetComponent<FPSHandsWeapon> (); //gets reference of script on current weapon
+	
+		if(isLocalPlayer){
+			playerHolder.layer = LayerMask.NameToLayer ("Player"); //local player will not see own player body
+
+			foreach(Transform child in playerHolder.transform){
+				child.gameObject.layer = LayerMask.NameToLayer ("Player");
+			}
+
+			for (int i = 0; i < weapons_FPS.Length; i++){
+				weapons_FPS [i].layer = LayerMask.NameToLayer ("Player");
+			}
+
+			weaponsHolder.layer = LayerMask.NameToLayer ("Enemy"); // local camera sees enemy layer so arms are set to enemy layer
+
+			foreach(Transform child in weaponsHolder.transform){
+				child.gameObject.layer = LayerMask.NameToLayer ("Enemy");
+			}
+		}
+
+		if(!isLocalPlayer){
+			playerHolder.layer = LayerMask.NameToLayer ("Enemy");
+
+			foreach(Transform child in playerHolder.transform){
+				child.gameObject.layer = LayerMask.NameToLayer ("Enemy");
+			}
+
+			for (int i = 0; i < weapons_FPS.Length; i++){
+				weapons_FPS [i].layer = LayerMask.NameToLayer ("Enemy");
+			}
+
+			weaponsHolder.layer = LayerMask.NameToLayer ("Player");
+
+			foreach(Transform child in weaponsHolder.transform){
+				child.gameObject.layer = LayerMask.NameToLayer ("Player");
+			}
+		}
+
+		if(!isLocalPlayer){
+			for (int i = 0; i < mouseLook.Length; i++){
+				mouseLook [i].enabled = false;
+			}
+		}
+
+		mainCam = transform.Find ("FPS View").Find ("FPS Camera").GetComponent<Camera> ();
+		mainCam.gameObject.SetActive (false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		if(isLocalPlayer){
+			if(!mainCam.gameObject.activeInHierarchy){
+				mainCam.gameObject.SetActive (true);
+			}
+		}
+
 		if(!isLocalPlayer){
 			//if this statement is true and we execute return code, all code written below return will not be executed. playerMovement and SelectWeapon
 			return;

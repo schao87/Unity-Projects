@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Networking;
 public class FPSShootingControls : MonoBehaviour {
 
 	private Camera mainCam;
@@ -12,7 +12,7 @@ public class FPSShootingControls : MonoBehaviour {
 	[SerializeField] private GameObject concrete_Impact;
 	// Use this for initialization
 	void Start () {
-		mainCam = Camera.main;
+		mainCam = transform.Find ("FPS View").Find ("FPS Camera").GetComponent<Camera> ();
 	}
 	
 	// Update is called once per frame

@@ -29,11 +29,6 @@ public class FPSMouse : MonoBehaviour {
 	void Start () {
 		originalRotation = transform.rotation;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	void LateUpdate(){ //late update is called after updated and fixed update
 		HandleRotation();
